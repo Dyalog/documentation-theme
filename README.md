@@ -1,20 +1,59 @@
-# Documentation Theme
-Central respository of stylesheets, assets and tools used across documentation of Dyalog projects
+# Documentation Theme (Zensical)
 
-## How to include in another project
-Futher explanation in [github.blog/open-source/git/working-with-submodules/](https://github.blog/open-source/git/working-with-submodules/).
+Stylesheets, fonts and images for Dyalog documentation built with
+[Zensical](https://zensical.org/), the successor to Material for MkDocs. This is
+the `zensical` branch of
+[`documentation-theme`](https://github.com/Dyalog/documentation-theme); `main`
+targets Material for MkDocs.
 
-These assets are for inclusion in Dyalog projects that use [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) for their documentation to enforce a consistent style and allow updating styles from a single source.
+## What's here
 
-1. Clone the repository for the project.
-2. Open a terminal (with Git installed) and navigate (`cd`) to the repository directory.
-3. Run the following command to add this repository as a Git submodule.
-    ```shell
-    git submodule add https://github.com/Dyalog/documentation-theme
-    ```
+| Path                  | Contents                                                  |
+| --------------------- | --------------------------------------------------------- |
+| `css/dyalog.css`      | The theme: fonts and light/dark colour schemes             |
+| `fonts/APL387`        | [APL387](https://github.com/Dyalog/APL387), for all code |
+| `fonts/IBMPlexSans`   | Body text, regular and bold with italics                   |
+| `images`              | Favicon, Dyalog logos and issue-type icons                 |
 
-> **NOTE:**
-> 
-> If you are working on multiple projects, instead of doing a recursive clone you might prefer to clone this repository separately. Recursive cloning each project will result in having a copy of the documentation theme inside every project you clone.
-> 
-> The documentation can be previewed using the Docker configuration in the **tools** directory. The assets are included by setting the `STYLES_DIR` variable in the **.env** file in the **tools** directory.
+## Usage
+
+Zensical only copies files from inside `docs_dir` and does not follow symlinks,
+so add the theme under `docs/`:
+
+```shell
+git submodule add -b zensical https://github.com/Dyalog/documentation-theme docs/documentation-theme
+```shell
+
+Then in `zensical.toml`:
+
+```toml
+[project]
+extra_css = ["documentation-theme/css/dyalog.css"]
+
+[project.theme]
+variant = "classic"
+logo = "documentation-theme/images/dyalog-logo_orange.svg"
+favicon = "documentation-theme/images/dyalog-ide-cube-2025.2.svg"
+font = false          # fonts are self-hosted, skip Google Fonts
+features = ["content.code.copy", "navigation.sections"]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "custom"    # colours come from dyalog.css
+accent = "custom"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+```
+
+## Licences
+
+Each font directory has its own `LICENCE`. The root `LICENCE` covers the rest.
